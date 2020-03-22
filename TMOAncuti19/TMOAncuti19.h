@@ -16,6 +16,7 @@ public:
 	TMOAncuti19();
 	virtual ~TMOAncuti19();
 	virtual int Transform();
+	void SaveData(double * dstData, cv::Mat red, cv::Mat green, cv::Mat blue);
 	
 
 protected:
