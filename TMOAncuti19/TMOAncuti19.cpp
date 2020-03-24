@@ -120,22 +120,25 @@ int TMOAncuti19::Transform()
 	cv::Mat localPatch = cv::Mat::zeros(patchSize, patchSize, CV_64FC1);
 
 
-/*
+
+	// weight map generated for red channel
+	//iterate trouch the red channel
 	double entropy_ij
-	for (int i = 0; i < height; i++)
-		for (int j = 0; j < width; j++)
-			{
-				localPatch.at<double>(0,0)
-				localPatch.at<double>(1,0)
-				localPatch.at<double>(2,0) 
+	for (int y = 0; y < height; y++)
+		for (int x = 0; x < width; x++)
+		{
+			//get local patch for 
+			localPatch = getLocalPatchFromSource(patchSize, red, x, y);
 
-				red.at<double>(j,i) = *srcData++; 
+			// analyze localPatch - get histogram ??? to get probability of a pixel ? 
+			// and compute entropy for pixel at x,y
+			// and store it into the weightMap ???
 
-			}
-*/
+		}
 
 
-	localPatch = getLocalPatchFromSource(patchSize, blue, 1, 1);
+
+	
 
 
 
