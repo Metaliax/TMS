@@ -17,7 +17,7 @@ public:
 	virtual ~TMOAncuti19();
 	virtual int Transform();
 	void SaveData(double * dstData, cv::Mat &red, cv::Mat &green, cv::Mat &blue);
-	cv::Mat LocalEntropy();
+	double getEntropyFromLocalPatch(cv::Mat &localPatch, double threshold, double pixel_value);
 	cv::Mat getLocalPatchFromSource(int patchSize, cv::Mat &src, int pos_i, int pos_j);
 	
 

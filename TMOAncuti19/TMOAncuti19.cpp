@@ -1,6 +1,6 @@
 /* --------------------------------------------------------------------------- *
  * TMOAncuti19.cpp: implementation of the TMOAncuti19 class.   *
- * VYF - term project
+ * VYF - Term Project
  * Author : Matej Bobuľa 
  * --------------------------------------------------------------------------- */
 
@@ -17,8 +17,8 @@
  * --------------------------------------------------------------------------- */
 TMOAncuti19::TMOAncuti19()
 {
-	SetName(L"Ancuti19");						
-    SetDescription(L"Image Decolorization based on Information Theory");
+	SetName(L"Ancuti19");
+	SetDescription(L"Image Decolorization based on Information Theory");
 }
 
 TMOAncuti19::~TMOAncuti19()
@@ -29,21 +29,42 @@ void TMOAncuti19::SaveData(double * dstData, cv::Mat &red, cv::Mat &green, cv::M
 {
 	for (int j = 0; j < pSrc->GetHeight(); j++)
 	{
-	    pSrc->ProgressBar(j, pSrc->GetHeight());
+		pSrc->ProgressBar(j, pSrc->GetHeight());
 		
-	    for (int i = 0; i < pSrc->GetWidth(); i++) ///result to output, taking only the image correction is discarded
-	    {
-		  *dstData++ = red.at<double>(j,i);
-		  *dstData++ = green.at<double>(j,i);
-		  *dstData++ = blue.at<double>(j,i);
-	    }
+		for (int i = 0; i < pSrc->GetWidth(); i++) ///result to output, taking only the image correction is discarded
+		{
+			*dstData++ = red.at<double>(j,i);
+			*dstData++ = green.at<double>(j,i);
+			*dstData++ = blue.at<double>(j,i);
+		}
 	}
 }
 
 
-cv::Mat TMOAncuti19::LocalEntropy()
+double TMOAncuti19::getEntropyFromLocalPatch(cv::Mat &localPatch, double threshold,double pixel_value)
 {
- 
+	// TODO
+	//pre kazdy element v localpatchi ziskaj jeho pravdepodobnost vyskytu
+	//entropy = suma vsetkyh P * (log (1/P))...je to v papiery!!!
+
+	double occurence = 0.0;
+	//find n# of occurences of pixel_value in local patch
+	for (int j = 0; j < localPatch.rows; j++)
+		for (int i = 0; i < localPatch.cols; i++) 
+			if(localPatch.at<double>(j,i) == pixel_value) occurence++;
+
+
+	double probability = occurence / (localPatch.rows * localPatch.cols);
+
+
+	if (DEBUG) std::cerr << probability << "\n\n";
+
+
+	double entropy = probability;
+
+
+	return entropy;
+
 }
 
 
@@ -116,11 +137,14 @@ int TMOAncuti19::Transform()
 
 
 	// local maps
-	//cv::Mat redLocalMap = cv::Mat::zeros(height, width, CV_64FC1);
+	cv::Mat redLocalMap = cv::Mat::zeros(height, width, CV_64FC1);
 	cv::Mat localPatch = cv::Mat::zeros(patchSize, patchSize, CV_64FC1);
 
+	localPatch = getLocalPatchFromSource(patchSize, blue, 5, 5);
 
+	double entropy = getEntropyFromLocalPatch(localPatch, 0, 254);
 
+/*
 	// weight map generated for red channel
 	//iterate trouch the red channel
 	double entropy_ij;
@@ -134,10 +158,13 @@ int TMOAncuti19::Transform()
 			// and compute entropy for pixel at x,y
 			// and store it into the weightMap ???
 
+
+		//redLocalMap.at<double>(y,x) = value;
+
 		}
 
 
-
+*/
 	
 
 
@@ -148,10 +175,12 @@ int TMOAncuti19::Transform()
 
 
 	if (DEBUG) std::cerr << "Saving...\n";
-	//SaveData(dstData, red, green, blue);
+	
+	SaveData(dstData, red, green, blue);
 	//SaveData(dstData, red, red, red);
 	//SaveData(dstData, green, green, green);
-	SaveData(dstData, blue, blue, blue);
+	//SaveData(dstData, blue, blue, blue);
+	
 	if (DEBUG) std::cerr << "Save Completed !\n";
 
 	return 0;
