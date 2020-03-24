@@ -69,7 +69,9 @@ for (int row = -patchRowCeneter; row <= patchRowCeneter; row++) //idem po riadko
 
 		if (DEBUG) std::cerr << pos_x_in_patch << " " << pos_y_in_patch << " = " <<  pos_x_in_src << " " << pos_y_in_src <<"\n";
 		
-		localPatch.at<double>(pos_y_in_patch ,pos_x_in_patch) = src.at<double>(pos_y_in_src, pos_x_in_src);
+		// ak som nevysiel z obrazu tak to zapis, inak nechaj localPatch 0, cize cierny
+		if (( pos_x_in_src >= 0 && pos_y_in_src >= 0) && ( pos_y_in_src <= src.rows &&  pos_x_in_src <= src.cols))
+			localPatch.at<double>(pos_y_in_patch ,pos_x_in_patch) = src.at<double>(pos_y_in_src, pos_x_in_src);
 	}
 
 	if (DEBUG) std::cerr << "\nlocalPatch = \n" << localPatch << "\n\n";
@@ -133,7 +135,7 @@ int TMOAncuti19::Transform()
 */
 
 
-	localPatch = getLocalPatchFromSource(patchSize, green, 5, 5);
+	localPatch = getLocalPatchFromSource(patchSize, blue, 1, 1);
 
 
 
@@ -145,8 +147,8 @@ int TMOAncuti19::Transform()
 	if (DEBUG) std::cerr << "Saving...\n";
 	//SaveData(dstData, red, green, blue);
 	//SaveData(dstData, red, red, red);
-	SaveData(dstData, green, green, green);
-	//SaveData(dstData, blue, blue, blue);
+	//SaveData(dstData, green, green, green);
+	SaveData(dstData, blue, blue, blue);
 	if (DEBUG) std::cerr << "Save Completed !\n";
 
 	return 0;
