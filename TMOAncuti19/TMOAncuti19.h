@@ -16,7 +16,9 @@ public:
 	TMOAncuti19();
 	virtual ~TMOAncuti19();
 	virtual int Transform();
-	void SaveData(double * dstData, cv::Mat red, cv::Mat green, cv::Mat blue);
+	void SaveData(double * dstData, cv::Mat &red, cv::Mat &green, cv::Mat &blue);
+	cv::Mat LocalEntropy();
+	cv::Mat getLocalPatchFromSource(int patchSize, cv::Mat &src, int pos_i, int pos_j);
 	
 
 protected:
