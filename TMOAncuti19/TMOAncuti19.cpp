@@ -123,7 +123,7 @@ int TMOAncuti19::Transform()
 
 	// weight map generated for red channel
 	//iterate trouch the red channel
-	double entropy_ij
+	double entropy_ij;
 	for (int y = 0; y < height; y++)
 		for (int x = 0; x < width; x++)
 		{
